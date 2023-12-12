@@ -4,18 +4,18 @@
  * Date: 12/10/2023
  * Author: Pete Coutros
  * 
- * Purpose: The purpose of this class is to model a car object traveling through intersections that are spaced 1000 meters apart. The 
- * Car travels in a straight line  at a constant speed in meters per second as long as it is not at a red light. The Car's xPosition 
- * is calculated by the speed of the car and the elapsed time it has been traveling. If the car is stopped at a Red light, the xPosition
- * should not increase until that light turns Green. The yPosition will remain 0 throughout the Car's journey as it only moves in the 
- * xPosition. The Car will continue at its speed through Green and Yellow lights. It will stop on a dime at the Red lights. If the Car's 
- * xPosition is not at an interval of 1000 (meaning it is not near an intersection) when the light ahead is Red, the car will continue to 
- * travel towards that Red light. When it reaches said intersection, if the light is still Red the Car will stop and wait for a Green 
- * light, otherwise it will continue through it. When the Car's stop at the Red lights, they will leave distance between them and the light 
- * that corresponds to their speed. This program updates every second, so if the next update in xPosition would put the car past the Red 
- * light it will stop short of the light where the meters directly correspond to the speed of the car. For example, if the car is traveling 
- * at 50 meters per second, and the light in front turns Red when the Car's xPostion is 900, the Car will travel until 950 and then stop and 
- * wait for the light to turn Green.
+ * Purpose: The purpose of this class is to model a car object traveling through intersections that are spaced 1000 meters apart. It 
+ * implements the Runnable interface and overrides the run() method to be implemented as a Thread. The Car travels in a straight line 
+ * at a constant speed in meters per second as long as it is not at a red light. The Car's xPosition is calculated by the speed of the
+ * car and the elapsed time it has been traveling. If the car is stopped at a Red light, the xPosition should not increase until that 
+ * light turns Green. The yPosition will remain 0 throughout the Car's journey as it only moves in the xPosition. The Car will continue 
+ * at its speed through Green and Yellow lights. It will stop on a dime at the Red lights. If the Car's xPosition is not at an interval 
+ * of 1000 (meaning it is not near an intersection) when the light ahead is Red, the car will continue to travel towards that Red light. 
+ * When it reaches said intersection, if the light is still Red the Car will stop and wait for a Green light, otherwise it will continue 
+ * through it. When the Car's stop at the Red lights, they will leave distance between them and the light that corresponds to their speed. 
+ * This program updates every second, so if the next update in xPosition would put the car past the Red light it will stop short of the 
+ * light where the meters directly correspond to the speed of the car. For example, if the car is traveling at 50 meters per second, and 
+ * the light in front turns Red when the Car's xPostion is 900, the Car will travel until 950 and then stop and wait for the light to turn Green.
  * 
  * @author Pete Coutros
  */
@@ -23,15 +23,15 @@
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 public class Car implements Runnable {
 	
 	private final static long RED_LIGHT_LENGTH = 12000; 			//The length of the Red Light
 	
-	private JTextField carField;									//Used to update the X, Y position of the Car to the GUI
-	private double xPosition, yPosition, lastKnownPosition;			//Used to store the X, Y, and last known positions of the car
-	private double speed;											//Used to store the speed of the car in meters per second
+	private JTextArea carField;										//Used to update the X, Y position of the Car to the GUI
+	private int xPosition, yPosition, lastKnownPosition;			//Used to store the X, Y, and last known positions of the car
+	private int speed;												//Used to store the speed of the car in meters per second
 	private volatile boolean isProgramRunning, isProgramPaused;		//Used to control the status of the Thread
 	private long startTime, totalPauseTime;							//Used to store when the program starts and the total time paused
 	private ArrayList<TrafficLightSimulator> trafficLights;			//Used to determine the amount of lights needed to traverse
@@ -49,7 +49,7 @@ public class Car implements Runnable {
      * 
      * @param JTextField jtf, double mps, ArrayList<TrafficLightSimulatior> lights
      */
-	public Car(JTextField jtf, double mps, ArrayList<TrafficLightSimulator> lights) {
+	public Car(JTextArea jtf, int mps, ArrayList<TrafficLightSimulator> lights) {
 		
 		carField = jtf;												//initialize the JTextField so the X, Y positions can be updated in the GUI								
 		xPosition = 0;												//Initialize the xPosition to 0 as the car is not moving yet
@@ -85,6 +85,7 @@ public class Car implements Runnable {
         		startTime = 0;											//Reset the startTime to 0 as the simulation has ended
         		isProgramRunning = isRunning;							//Set the boolean flag value from the arguments
         	}
+    		notifyAll();
         } finally {
             lock.unlock();												//Release the lock
         }
@@ -99,6 +100,8 @@ public class Car implements Runnable {
 		lock.lock();													//Acquires the lock, if unavailable the Thread goes dormant until it is
         try {
             isProgramPaused = isPaused;									//Set the boolean flag value from the arguments
+    		notifyAll();
+
         } finally {
             lock.unlock();												//Released the lock
         }
@@ -114,7 +117,7 @@ public class Car implements Runnable {
 	 */
 	@Override
 	public void run() {
-		double futureDistance = 0;				//Used to determine if the car can continue traveling toward a light when that light is red
+		int futureDistance = 0;					//Used to determine if the car can continue traveling toward a light when that light is red
 		long redLightWaitingTime = 0;			//Used to keep track of the time spent waiting at a red light
 		long movingTowardRedLightTime = 0;		//Used to keep track of the time spent traveling towards a light when the light is red
 		
@@ -124,12 +127,12 @@ public class Car implements Runnable {
 				//Keep track of the time elapsed since the simulation began. Adjusts for time spent waiting at red lights and pause time
 				long elapsedTime = System.currentTimeMillis() - startTime - redLightWaitingTime - totalPauseTime;
 				//Keep track of the distance to the next intersection, they're all spaced 1000 meters apart
-				double distanceToNextLight = 1000 * (trafficLightIndex + 1);
+				int distanceToNextLight = 1000 * (trafficLightIndex + 1);
 				
 				//If the Car has passed all of the intersections, continue traveling at its steady speed
 				if (trafficLightIndex >= trafficLights.size()) {
-					xPosition = lastKnownPosition + (speed * elapsedTime)/ 1000.0;
-					carField.setText("X, Y Position: " + xPosition + ", " + yPosition);
+					xPosition = (int) (lastKnownPosition + (speed * elapsedTime)/ 1000);
+					carField.setText("X, Y Position: " + xPosition + ", " + yPosition + "\nSpeed: " + speed + "mps\nAll intersections have been passed!");
 				
 				//Otherwise the car is still within the range of intersections and needs to adhere to the lights
 				} else {
@@ -139,14 +142,14 @@ public class Car implements Runnable {
 					
 					//If the light is Green or Yellow continue traveling at its steady speed
 					if(currentLightColor != TrafficLightColor.RED) {
-						xPosition = lastKnownPosition + (speed * elapsedTime)/ 1000.0;
-						carField.setText("X, Y Position: " + xPosition + ", " + yPosition + (trafficLightIndex + 1));
+						xPosition = (int) (lastKnownPosition + (speed * elapsedTime)/ 1000);
+						carField.setText("X, Y Position: " + xPosition + ", " + yPosition + "\nSpeed: " + speed + "mps\nUpcoming Intersection: " + (trafficLightIndex + 1));
 					
 					//Otherwise the light is Red and the car needs to either continue traveling towards the light or stop
 					} else {
 						
 						//Calculate the future distance of the car if it were to continue traveling
-						futureDistance = lastKnownPosition + (speed * elapsedTime)/ 1000.0;
+						futureDistance = (int) (lastKnownPosition + (speed * elapsedTime)/ 1000);
 						
 						//If that distance is less than the distance of the traffic light, continue traveling
 						if (futureDistance < distanceToNextLight) {
@@ -155,8 +158,8 @@ public class Car implements Runnable {
 							movingTowardRedLightTime += 1000;
 							
 							//Continue traveling toward the Red light at its steady speed
-							xPosition = lastKnownPosition + (speed * elapsedTime)/ 1000.0;
-							carField.setText("X, Y Position: " + xPosition + ", " + yPosition);
+							xPosition = (int) (lastKnownPosition + (speed * elapsedTime)/ 1000);
+							carField.setText("X, Y Position: " + xPosition + ", " + yPosition + "\nSpeed: " + speed +  "mps\nTraveling toward Red Light: " + (trafficLightIndex + 1));
 							
 							//If the time spent moving toward the red light exceeds the length of the red light light, the car never reached the light
 							//so reset the time
@@ -169,6 +172,8 @@ public class Car implements Runnable {
 							
 							//Calculate the time spent waiting at the Red light taking into account the time spent moving toward it
 							redLightWaitingTime += RED_LIGHT_LENGTH - movingTowardRedLightTime;
+							
+							carField.setText("X, Y Position: " + xPosition + ", " + yPosition + "\nSpeed: 0mps\nStopped at Red Light: " + (trafficLightIndex + 1));
 							
 							//Stop at the light for the amount of time remaining before it turns Green
 							try {
@@ -194,12 +199,12 @@ public class Car implements Runnable {
 			//Otherwise the program is paused 
 			} else {
 				
-				//Increment the time paused by 1 second
-				totalPauseTime += 1000;
+				//Increment the time paused by 0.1 second
+				totalPauseTime += 100;
 				
-				//Sleep Thread for 1 second while paused so that updates occur every one second
+				//Sleep Thread for 0.1 second while paused so that updates occur every point one second
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch(InterruptedException ie) {}
 			}
 
