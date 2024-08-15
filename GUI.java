@@ -1,6 +1,5 @@
 /**
  * File Name: GUI.java
- * Course: CMSC335 7381
  * Date: 12/10/2023
  * Author: Pete Coutros
  * 
@@ -10,8 +9,6 @@
  * the simulation, 4) Stop to stop the simulation, 5) Add Intersection to add an intersection to the simulation, and 6) Add Car to add a car to the simulation. The
  * buttons are either enabled or disabled depending on what prior button was pressed. This is done to control the flow of the simultion. For example, you cannot add
  * a Car or and Intersection while the simulation has started, you would need to do it prior to the start.
- * 
- * @author Pete Coutros
  */
 
 import java.awt.*;
