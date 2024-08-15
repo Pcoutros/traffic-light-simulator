@@ -1,16 +1,11 @@
 /**
  * File Name: TrafficLightSimulator.java
- * Course: CMSC335 7381
  * Date: 12/10/2023
  * Author: Pete Coutros
  * 
  * Purpose: The purpose of this class is to model a traffic light of an intersection with RED, YELLOW, and GREEN lights. It implements the Runnable interface 
  * and overrides the run() method to be implemented as a Thread. While the simulation is running and not paused, the lights will start on Green for 10 seconds, 
  * then transition to Yellow for 2 seconds, then transition to Red for 12 seconds.
- * 
- * NOTE: Majority of this class comes directly from the code example provided for this project
- * 
- * @author Pete Coutros
  */
 
 import java.util.concurrent.locks.Lock;
