@@ -1,6 +1,5 @@
 /**
  * File Name: CurrentTime.java
- * Course: CMSC335 7381
  * Date: 12/10/2023
  * Author: Pete Coutros
  * 
