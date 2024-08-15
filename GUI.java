@@ -23,16 +23,16 @@ import javax.swing.border.Border;
 
 public class GUI {
 	
-	private JFrame frame;										//Used to house all panels
+	private JFrame frame;								//Used to house all panels
 	private JPanel left, center,right, bottom;					//Used to house info on CurrentTime, Traffic light colors, X, Y position of Cars, and Button controls
 	private JButton start, pause, resume, stop, 
-			addIntersection, addCar;									//Buttons used to control the simulation
-	private JTextField timeField, firstLight, secondLight, thirdLight;	//JTextFields to display the current status of the simulation (Time and Lights)
-	private JTextArea firstCar, secondCar, thirdCar;					//JTextFields to display the current status of the simulation (Car and the Current intersection)
+			addIntersection, addCar;					//Buttons used to control the simulation
+	private JTextField timeField, firstLight, secondLight, thirdLight;		//JTextFields to display the current status of the simulation (Time and Lights)
+	private JTextArea firstCar, secondCar, thirdCar;				//JTextFields to display the current status of the simulation (Car and the Current intersection)
 	private JLabel firstLightLabel, secondLightLabel, thirdLightLabel, 
-			firstCarLabel, secondCarLabel, thirdCarLabel;				//JLabels to organize the data
-	private int carCount = 3;									//Each simulation starts with 3 cars
-	private int intersectionCount = 3;							//Each simulation starts with 3 intersections
+			firstCarLabel, secondCarLabel, thirdCarLabel;			//JLabels to organize the data
+	private int carCount = 3;							//Each simulation starts with 3 cars
+	private int intersectionCount = 3;						//Each simulation starts with 3 intersections
 	
 	/**
 	 * Constructor to create the GUI. It places the needed components in each panel and places the panels in the JFrame. It also adds functionality to the buttons
@@ -117,24 +117,24 @@ public class GUI {
 		//Set the dimension sizes of each of the panels
 		left.setPreferredSize(new Dimension(200, 300));
 		center.setPreferredSize(new Dimension(200, 300));
-		firstLight.setPreferredSize(new Dimension(200, 100));	//Only one light needs to be set and the others will take the same size
+		firstLight.setPreferredSize(new Dimension(200, 100));		//Only one light needs to be set and the others will take the same size
 		right.setPreferredSize(new Dimension(600, 300));
 		firstCar.setPreferredSize(new Dimension(200, 100));		//Only one car needs to be set and the others will take the same size
 		bottom.setPreferredSize(new Dimension(800, 100));
 	
 		//Instantiate the buttons, set them as enabled/disabled, and add them to the Button panel
 		start = new JButton("Start");
-		start.setEnabled(true);									//Upon creating the GUI, the Start should be enabled
+		start.setEnabled(true);						//Upon creating the GUI, the Start should be enabled
 		pause = new JButton("Pause");
-		pause.setEnabled(false);								//Pause is disabled as the simulation would first need to be Started
+		pause.setEnabled(false);					//Pause is disabled as the simulation would first need to be Started
 		resume = new JButton("Continue");
-		resume.setEnabled(false);								//Continue is disabled as the simulation would first need to be Started
+		resume.setEnabled(false);					//Continue is disabled as the simulation would first need to be Started
 		stop = new JButton("Stop");
-		stop.setEnabled(false);									//Stop is disabled as the simulation would first need to be Started
+		stop.setEnabled(false);						//Stop is disabled as the simulation would first need to be Started
 		addIntersection = new JButton("Add Intersection");
-		addIntersection.setEnabled(true);						//Add Intersection is enabled as you would need to add prior to Starting
+		addIntersection.setEnabled(true);				//Add Intersection is enabled as you would need to add prior to Starting
 		addCar = new JButton("Add Car");
-		addCar.setEnabled(true);								//Add Car is enabled as you would need to add prior to Starting
+		addCar.setEnabled(true);					//Add Car is enabled as you would need to add prior to Starting
 		bottom.add(start);
 		bottom.add(pause);
 		bottom.add(resume);
@@ -148,7 +148,7 @@ public class GUI {
 		frame.add(right, BorderLayout.EAST);
 		frame.add(bottom, BorderLayout.SOUTH);
 		
-		addButtonFunctionality();								//Add functionality to the buttons
+		addButtonFunctionality();					//Add functionality to the buttons
 	}
 	
 	/**
@@ -161,8 +161,8 @@ public class GUI {
 		
 		CurrentTime currentTime = new CurrentTime(timeField);				//Create a new currentTime object and pass in the respective JTextField for it to update to
 		
-		ArrayList<TrafficLightSimulator> trafficLights = new ArrayList<>();			//Start a list of traffic lights
-		ArrayList<Car> cars = new ArrayList<>();									//Start a list of cars
+		ArrayList<TrafficLightSimulator> trafficLights = new ArrayList<>();		//Start a list of traffic lights
+		ArrayList<Car> cars = new ArrayList<>();					//Start a list of cars
 		
 		//Create three new TrafficLightSimulator objects and pass in their respective JTextFields for them to update to
 		TrafficLightSimulator lightOne = new TrafficLightSimulator(firstLight);		
@@ -206,12 +206,12 @@ public class GUI {
 			currentTime.setIsProgramRunning(true);
 			time.start();
 	
-			start.setEnabled(false);				//Disables the Start button
-			stop.setEnabled(true);					//Enables the Stop button
-			pause.setEnabled(true);					//Enables the Pause button
-			resume.setEnabled(false);				//Disables the Continue button
+			start.setEnabled(false);			//Disables the Start button
+			stop.setEnabled(true);				//Enables the Stop button
+			pause.setEnabled(true);				//Enables the Pause button
+			resume.setEnabled(false);			//Disables the Continue button
 			addIntersection.setEnabled(false);		//Disables the Add Intersection button
-			addCar.setEnabled(false);				//Disables the Add Car button
+			addCar.setEnabled(false);			//Disables the Add Car button
 			
 		});
 		
@@ -230,12 +230,12 @@ public class GUI {
 				car.setIsProgramPaused(true);
 			}
 			
-			pause.setEnabled(false);				//Disables the Pause button
-			start.setEnabled(false);				//Disables the Start button
-			resume.setEnabled(true);				//Enables the Continue button
-			stop.setEnabled(true);					//Enables the Stop button
+			pause.setEnabled(false);			//Disables the Pause button
+			start.setEnabled(false);			//Disables the Start button
+			resume.setEnabled(true);			//Enables the Continue button
+			stop.setEnabled(true);				//Enables the Stop button
 			addIntersection.setEnabled(false);		//Disables the Add Intersection button
-			addCar.setEnabled(false);				//Disables the Add Car button
+			addCar.setEnabled(false);			//Disables the Add Car button
 		});
 		
 		//Give functionality to the Continue button
@@ -253,12 +253,12 @@ public class GUI {
 				car.setIsProgramPaused(false);
 			}
 			
-			resume.setEnabled(false);				//Disables the Continue button
-			start.setEnabled(false);				//Disables the Start button
-			stop.setEnabled(true);					//Enables the Stop button
-			pause.setEnabled(true);					//Enables the Pause button
+			resume.setEnabled(false);			//Disables the Continue button
+			start.setEnabled(false);			//Disables the Start button
+			stop.setEnabled(true);				//Enables the Stop button
+			pause.setEnabled(true);				//Enables the Pause button
 			addIntersection.setEnabled(false);		//Disables the Add Intersection button
-			addCar.setEnabled(false);				//Disables the Add Car button
+			addCar.setEnabled(false);			//Disables the Add Car button
 		});
 		
 		//Give functionality to the Stop button
@@ -276,23 +276,23 @@ public class GUI {
 				car.setIsProgramRunning(false);
 			}
 
-			stop.setEnabled(false);					//Disables the Stop button
-			start.setEnabled(true);					//Enables the Start button
-			pause.setEnabled(false);				//Disables the Pause button
-			resume.setEnabled(false);				//Disables the Continue button
+			stop.setEnabled(false);				//Disables the Stop button
+			start.setEnabled(true);				//Enables the Start button
+			pause.setEnabled(false);			//Disables the Pause button
+			resume.setEnabled(false);			//Disables the Continue button
 			addIntersection.setEnabled(true);		//Enables the Add Intersection button
-			addCar.setEnabled(true);				//Enables the Add Car button
+			addCar.setEnabled(true);			//Enables the Add Car button
 		});
 		
 		//Give functionality to the Add Intersection button
 		addIntersection.addActionListener((ActionEvent e) -> {
 			
-			intersectionCount++;															//Increment the count of intersections
+			intersectionCount++;									//Increment the count of intersections
 			JLabel newLightLabel = new JLabel("Intersection " + intersectionCount);			//Create a new JLabel for the intersection
-			JTextField newLightField = new JTextField();									//Create a new JTextField for the intersection
-			newLightField.setEditable(false);												//Set the JTF to disable editing
-			TrafficLightSimulator addedLight = new TrafficLightSimulator(newLightField);	//Create a new TrafficLightSimulator object
-			trafficLights.add(addedLight);													//Add the new light to the ArrayList of traffic lights
+			JTextField newLightField = new JTextField();						//Create a new JTextField for the intersection
+			newLightField.setEditable(false);							//Set the JTF to disable editing
+			TrafficLightSimulator addedLight = new TrafficLightSimulator(newLightField);		//Create a new TrafficLightSimulator object
+			trafficLights.add(addedLight);								//Add the new light to the ArrayList of traffic lights
 			
 			center.add(newLightLabel);				//Add the new traffic light label to the panel containing the lights
 			center.add(newLightField);				//Add the new traffic light JTF to the panel containing the lights
@@ -305,12 +305,12 @@ public class GUI {
 		//Give functionality to the Add Car button
 		addCar.addActionListener((ActionEvent e) -> {
 			
-			carCount++;													//Increment the count of cars
-			JLabel newCarLabel = new JLabel("Car " + carCount);			//Create a new JLabel for the car
-			JTextArea newCarField = new JTextArea();					//Create a new JTextArea for the car
-			newCarField.setEditable(false);								//Set the JTF to disable editing
+			carCount++;							//Increment the count of cars
+			JLabel newCarLabel = new JLabel("Car " + carCount);		//Create a new JLabel for the car
+			JTextArea newCarField = new JTextArea();			//Create a new JTextArea for the car
+			newCarField.setEditable(false);					//Set the JTF to disable editing
 			Car addedCar = new Car(newCarField, 50, trafficLights);		//Create a new Car object. ALL ADDED CARS WILL HAVE A SPEED OF 50 meters per second
-			cars.add(addedCar);											//Add the new Car to the ArrayList of cars
+			cars.add(addedCar);						//Add the new Car to the ArrayList of cars
 				
 			right.add(newCarLabel);					//Add the new car label to the panel containing the cars
 			right.add(newCarField);					//Add the new car JTF to the panel containing the cars
