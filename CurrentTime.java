@@ -7,8 +7,6 @@
  * Purpose: The purpose of this class is to model the current time of the system. It implements the Runnable interface and overrides the run()
  * method to be implemented as a Thread. While the simulation has started and not been paused, the current date and time will be updated to a
  * JTextField in the GUI every one second. 
- * 
- * @author Pete Coutros
  */
 
 import java.text.SimpleDateFormat;
