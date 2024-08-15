@@ -1,6 +1,5 @@
 /**
  * File Name: Car.java
- * Course: CMSC335 7381
  * Date: 12/10/2023
  * Author: Pete Coutros
  * 
@@ -16,8 +15,6 @@
  * This program updates every second, so if the next update in xPosition would put the car past the Red light it will stop short of the 
  * light where the meters directly correspond to the speed of the car. For example, if the car is traveling at 50 meters per second, and 
  * the light in front turns Red when the Car's xPostion is 900, the Car will travel until 950 and then stop and wait for the light to turn Green.
- * 
- * @author Pete Coutros
  */
 
 import java.util.ArrayList;
