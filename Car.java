@@ -28,40 +28,39 @@ import javax.swing.JTextArea;
 public class Car implements Runnable {
 	
 	private final static long RED_LIGHT_LENGTH = 12000; 			//The length of the Red Light
-	
-	private JTextArea carField;										//Used to update the X, Y position of the Car to the GUI
+	private JTextArea carField;						//Used to update the X, Y position of the Car to the GUI
 	private int xPosition, yPosition, lastKnownPosition;			//Used to store the X, Y, and last known positions of the car
-	private int speed;												//Used to store the speed of the car in meters per second
+	private int speed;							//Used to store the speed of the car in meters per second
 	private volatile boolean isProgramRunning, isProgramPaused;		//Used to control the status of the Thread
-	private long startTime, totalPauseTime;							//Used to store when the program starts and the total time paused
+	private long startTime, totalPauseTime;					//Used to store when the program starts and the total time paused
 	private ArrayList<TrafficLightSimulator> trafficLights;			//Used to determine the amount of lights needed to traverse
-	private int trafficLightIndex;									//Used to get the specific light from the ArrayList of trafficLights
-    private final Lock lock = new ReentrantLock();					//Used to lock methods so that only one thread can access at a time
+	private int trafficLightIndex;						//Used to get the specific light from the ArrayList of trafficLights
+        private final Lock lock = new ReentrantLock();				//Used to lock methods so that only one thread can access at a time
 	
-    /**
-     * Constructor to create a Car object from the parameters. It takes in a JTextField to update the X, Y positions of the Car to a GUI, 
-     * speed in meters per second to calculate the Car's distance, and an ArrayList of trafficLights to determine the amount of intersection 
-     * the car traverses. In addition, it initially sets the X, Y, and last known positions to 0 (the car is initially at a dead stop 1000 
-     * meters before the first intersection). The booleans used to determine the status of the Thread are initialized to false indicating
-     * that the program is not running and the program is not paused. The start time is initialized to the current time and the total paused
-     * time is initialized to 0 as there has not been a pause yet. The trafficLightIndex is initialized to 0 so that the intersections start 
-     * with the first one.
-     * 
-     * @param JTextField jtf, double mps, ArrayList<TrafficLightSimulatior> lights
-     */
+    	/**
+    	* Constructor to create a Car object from the parameters. It takes in a JTextField to update the X, Y positions of the Car to a GUI, 
+     	* speed in meters per second to calculate the Car's distance, and an ArrayList of trafficLights to determine the amount of intersection 
+     	* the car traverses. In addition, it initially sets the X, Y, and last known positions to 0 (the car is initially at a dead stop 1000 
+     	* meters before the first intersection). The booleans used to determine the status of the Thread are initialized to false indicating
+     	* that the program is not running and the program is not paused. The start time is initialized to the current time and the total paused
+     	* time is initialized to 0 as there has not been a pause yet. The trafficLightIndex is initialized to 0 so that the intersections start 
+     	* with the first one.
+     	*	 
+     	* @param JTextField jtf, double mps, ArrayList<TrafficLightSimulatior> lights
+     	*/
 	public Car(JTextArea jtf, int mps, ArrayList<TrafficLightSimulator> lights) {
 		
-		carField = jtf;												//initialize the JTextField so the X, Y positions can be updated in the GUI								
-		xPosition = 0;												//Initialize the xPosition to 0 as the car is not moving yet
-		yPosition = 0;												//Initialize the yPosition to 0 as the car is not moving yet
-		lastKnownPosition = 0;										//Initialize the lastKnownPosition to 0 as the car has not moved prior
-		speed = mps;												//Initialize the speed from the value in the arguments (METERS PER SECOND!!!)
-		isProgramRunning = false;									//Initialize the isProgramRunning to false as the start button has not been pressed yet
-		isProgramPaused = false;									//Initialize the isProgramPaused to false as the program has not been paused yet
-		startTime = 0;												//Initialize the startTime to 0 as the start button has not been pressed yet
-		totalPauseTime = 0;											//Initialize the pauseTime to 0 as the program has not been paused yet
-		trafficLights = lights;										//Initialize the ArrayList of traffic lights the car will need to traverse
-		trafficLightIndex = 0;										//Initialize the index of the ArrayList to 0 so it starts at the beginning
+		carField = jtf;								//initialize the JTextField so the X, Y positions can be updated in the GUI								
+		xPosition = 0;								//Initialize the xPosition to 0 as the car is not moving yet
+		yPosition = 0;								//Initialize the yPosition to 0 as the car is not moving yet
+		lastKnownPosition = 0;							//Initialize the lastKnownPosition to 0 as the car has not moved prior
+		speed = mps;								//Initialize the speed from the value in the arguments (METERS PER SECOND!!!)
+		isProgramRunning = false;						//Initialize the isProgramRunning to false as the start button has not been pressed yet
+		isProgramPaused = false;						//Initialize the isProgramPaused to false as the program has not been paused yet
+		startTime = 0;								//Initialize the startTime to 0 as the start button has not been pressed yet
+		totalPauseTime = 0;							//Initialize the pauseTime to 0 as the program has not been paused yet
+		trafficLights = lights;							//Initialize the ArrayList of traffic lights the car will need to traverse
+		trafficLightIndex = 0;							//Initialize the index of the ArrayList to 0 so it starts at the beginning
 	}
 	
 	/**
@@ -72,22 +71,22 @@ public class Car implements Runnable {
 	 * @param boolean isRunning 
 	 */
 	public synchronized void setIsProgramRunning(boolean isRunning) {
-		lock.lock();													//Acquires the lock, if unavailable the Thread goes dormant until it is
+	lock.lock();										//Acquires the lock, if unavailable the Thread goes dormant until it is
         try {
-        	if (isRunning) {											//If the argument is True:
-        		xPosition = 0;											//Reset xPosition (yPosition is always 0 so no need to reset it) 
-                totalPauseTime = 0;										//Reset totalPause time to 0 as the simulation starts or restarts
-                lastKnownPosition = 0;									//Reset the lastKnownPosition to 0 as the simulation starts or restarts
-                trafficLightIndex = 0;									//Reset the trafficLightIndex to 0 as the simulation starts or restarts
-                startTime = System.currentTimeMillis();					//The program has started/restarted so record the start time as the current time
-                isProgramRunning = isRunning;							//Set the boolean flag value from the arguments
-        	} else {													//If the argument is False:
-        		startTime = 0;											//Reset the startTime to 0 as the simulation has ended
-        		isProgramRunning = isRunning;							//Set the boolean flag value from the arguments
+        	if (isRunning) {								//If the argument is True:
+        		xPosition = 0;								//Reset xPosition (yPosition is always 0 so no need to reset it) 
+                	totalPauseTime = 0;							//Reset totalPause time to 0 as the simulation starts or restarts
+                	lastKnownPosition = 0;							//Reset the lastKnownPosition to 0 as the simulation starts or restarts
+                	trafficLightIndex = 0;							//Reset the trafficLightIndex to 0 as the simulation starts or restarts
+                	startTime = System.currentTimeMillis();					//The program has started/restarted so record the start time as the current time
+                	isProgramRunning = isRunning;						//Set the boolean flag value from the arguments
+        	} else {									//If the argument is False:
+        		startTime = 0;								//Reset the startTime to 0 as the simulation has ended
+        		isProgramRunning = isRunning;						//Set the boolean flag value from the arguments
         	}
     		notifyAll();
         } finally {
-            lock.unlock();												//Release the lock
+            	lock.unlock();									//Release the lock
         }
 	}
 	
@@ -97,13 +96,13 @@ public class Car implements Runnable {
 	 * @param boolean isPaused
 	 */
 	public synchronized void setIsProgramPaused(boolean isPaused) {
-		lock.lock();													//Acquires the lock, if unavailable the Thread goes dormant until it is
+		lock.lock();						//Acquires the lock, if unavailable the Thread goes dormant until it is
         try {
-            isProgramPaused = isPaused;									//Set the boolean flag value from the arguments
+        	isProgramPaused = isPaused;				//Set the boolean flag value from the arguments
     		notifyAll();
 
         } finally {
-            lock.unlock();												//Released the lock
+            	lock.unlock();						//Released the lock
         }
 	}
 	
@@ -117,7 +116,7 @@ public class Car implements Runnable {
 	 */
 	@Override
 	public void run() {
-		int futureDistance = 0;					//Used to determine if the car can continue traveling toward a light when that light is red
+		int futureDistance = 0;				//Used to determine if the car can continue traveling toward a light when that light is red
 		long redLightWaitingTime = 0;			//Used to keep track of the time spent waiting at a red light
 		long movingTowardRedLightTime = 0;		//Used to keep track of the time spent traveling towards a light when the light is red
 		
