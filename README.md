@@ -25,7 +25,7 @@
 
 1) Clone the repository
 2) Open terminal and change directories to the desired destination
-3) Type: git clone and paste the URL copied earlier
+3) Type: `git clone <repository_url>`
 4) Change directory into the repository name
-5) Compile the GUI.java file using: javac GUI.java
-6) Run the program using: java GUI.java
+5) Compile the GUI.java file using: `javac GUI.java`
+6) Run the program using: `java GUI.java`
