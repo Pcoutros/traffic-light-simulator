@@ -28,4 +28,4 @@
 3) Type: `git clone <repository_url>`
 4) Change directory into the repository name
 5) Compile the GUI.java file using: `javac GUI.java`
-6) Run the program using: `java GUI.java`
+6) Run the program using: `java GUI`
